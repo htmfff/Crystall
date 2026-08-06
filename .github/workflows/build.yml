@@ -49,6 +49,10 @@ jobs:
         with:
           workspaces: ./src-tauri -> target
 
+      - name: Align Tauri crate versions with npm
+        working-directory: ./src-tauri
+        run: cargo update
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
