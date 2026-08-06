@@ -1,5 +1,6 @@
 name: Build
 
+# Build all desktop targets and attach installers to releases.
 on:
   push:
     branches: [master, main]
