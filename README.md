@@ -11,12 +11,6 @@ _One overlay, no tab, no trace._
 
 > **Your invisible AI, over everything you do.** Ask about anything on your screen. Listen to any conversation and have the right answer before you need it. One overlay, no tab, no trace. Invisible on screen shares, and no bot ever joins your calls.
 
-
-### 🔒 Why is Crystall closed source now?
-
-Years of open Pluely code kept getting repackaged and sold as clones, and no license or complaint ever stopped it.
-So v1 ships as signed binaries while the product itself stays free to use at its core.
-
 ---
 
 
