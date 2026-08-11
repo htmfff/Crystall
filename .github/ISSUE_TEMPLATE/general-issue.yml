@@ -1,13 +1,12 @@
-name: ❓ General Issue
+﻿name: вќ“ General Issue
 description: For questions, discussions, or issues that don't fit other categories
 title: "[GENERAL] "
 labels: ["question"]
-assignees: "iamsrikanthnani"
 body:
   - type: markdown
     attributes:
       value: |
-        ## ❓ General Issue
+        ## вќ“ General Issue
 
         **Before submitting:**
         - [x] I have searched for similar issues and didn't find a duplicate

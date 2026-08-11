@@ -1,6 +1,4 @@
 // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-mod activate;
-mod api;
 mod capture;
 mod db;
 mod shortcuts;
@@ -33,7 +31,7 @@ pub fn run() {
     let mut builder = tauri::Builder::default()
         .plugin(
             tauri_plugin_sql::Builder::default()
-                .add_migrations("sqlite:pluely.db", db::migrations())
+                .add_migrations("sqlite:crystall.db", db::migrations())
                 .build(),
         )
         .manage(AudioState::default())
@@ -42,7 +40,6 @@ pub fn run() {
             is_hidden: Mutex::new(false),
         })
         .manage(shortcuts::RegisteredShortcuts::default())
-        .manage(shortcuts::LicenseState::default())
         .manage(shortcuts::MoveWindowState::default())
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_http::init())
@@ -67,25 +64,9 @@ pub fn run() {
             shortcuts::get_registered_shortcuts,
             shortcuts::update_shortcuts,
             shortcuts::validate_shortcut_key,
-            shortcuts::set_license_status,
             shortcuts::set_app_icon_visibility,
             shortcuts::set_always_on_top,
             shortcuts::exit_app,
-            activate::activate_license_api,
-            activate::deactivate_license_api,
-            activate::validate_license_api,
-            activate::mask_license_key_cmd,
-            activate::get_checkout_url,
-            activate::secure_storage_save,
-            activate::secure_storage_get,
-            activate::secure_storage_remove,
-            api::transcribe_audio,
-            api::chat_stream_response,
-            api::fetch_models,
-            api::fetch_prompts,
-            api::create_system_prompt,
-            api::check_license_status,
-            api::get_activity,
             speaker::start_system_audio_capture,
             speaker::stop_system_audio_capture,
             speaker::manual_stop_continuous,

@@ -3,19 +3,14 @@
   "private": true,
   "version": "0.1.9",
   "description": "Crystall - A lightning-fast, privacy-first AI assistant that works seamlessly during meetings, interviews, and conversations without anyone knowing.",
-  "author": {
-    "name": "Srikanth Nani",
-    "email": "mail@srikanthnani.com",
-    "url": "https://www.srikanthnani.com"
-  },
   "license": "GPL-3.0",
-  "homepage": "https://github.com/iamsrikanthnani/pluely#readme",
+  "homepage": "https://github.com/htmfff/Crystall#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/iamsrikanthnani/pluely.git"
+    "url": "git+https://github.com/htmfff/Crystall.git"
   },
   "bugs": {
-    "url": "https://github.com/iamsrikanthnani/pluely/issues"
+    "url": "https://github.com/htmfff/Crystall/issues"
   },
   "keywords": [
     "ai-assistant",

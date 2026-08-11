@@ -1,13 +1,12 @@
-name: ✨ Feature Request
+﻿name: вњЁ Feature Request
 description: Suggest a new feature or enhancement
 title: "[FEATURE] "
 labels: ["enhancement"]
-assignees: "iamsrikanthnani"
 body:
   - type: markdown
     attributes:
       value: |
-        ## ✨ Feature Request
+        ## вњЁ Feature Request
 
         **Before submitting:**
         - [x] I have searched for similar feature requests and didn't find a duplicate

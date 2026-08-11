@@ -1,4 +1,4 @@
-use anyhow::Result;
+﻿use anyhow::Result;
 use futures_util::Stream;
 use serde::{Deserialize, Serialize};
 use std::pin::Pin;
@@ -64,7 +64,7 @@ pub(crate) fn list_output_devices() -> Result<Vec<AudioDevice>> {
     Ok(vec![])
 }
 
-// Pluely speaker input and stream
+// Crystall speaker input and stream
 pub struct SpeakerInput {
     #[cfg(any(target_os = "macos", target_os = "windows", target_os = "linux"))]
     inner: PlatformSpeakerInput,
