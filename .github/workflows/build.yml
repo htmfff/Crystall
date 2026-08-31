@@ -22,16 +22,20 @@ jobs:
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
+      - name: Install Windows dependencies
+        run: |
+          npm install -g @tauri-apps/cli
+
       - name: Install frontend dependencies
         run: npm install
 
-      - name: Build Tauri app
-        run: npx @tauri-apps/cli build
-
-      - name: Upload installer to Release
-        uses: softprops/action-gh-release@v2
+      - name: Build and release
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: |
-            src-tauri/target/release/bundle/nsis/*.exe
-          draft: false
+          tagName: ${{ github.ref_name }}
+          releaseName: "Crystall ${{ github.ref_name }}"
+          releaseBody: "See the assets below to download and install."
+          releaseDraft: false
           prerelease: false
