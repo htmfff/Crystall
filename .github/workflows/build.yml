@@ -34,8 +34,8 @@ jobs:
       - name: Install frontend dependencies
         run: npm install
 
-      - name: Generate lock file
-        run: npx tauri info
+      - name: Update Cargo.lock to match npm versions
+        run: cd src-tauri; cargo update
 
       - name: Build Tauri app
         run: npx tauri build
