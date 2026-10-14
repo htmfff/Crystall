@@ -85,6 +85,17 @@ export function useSystemAudio() {
   const [isRecordingInContinuousMode, setIsRecordingInContinuousMode] =
     useState<boolean>(false);
 
+  // Screenshot captured in the UI and attached to the next AI request
+  const [pendingScreenshot, setPendingScreenshotState] = useState<string | null>(
+    null
+  );
+  const pendingScreenshotRef = useRef<string | null>(null);
+
+  const setPendingScreenshot = useCallback((value: string | null) => {
+    pendingScreenshotRef.current = value;
+    setPendingScreenshotState(value);
+  }, []);
+
   const [conversation, setConversation] = useState<ChatConversation>({
     id: "",
     title: "",
@@ -498,6 +509,15 @@ export function useSystemAudio() {
           return;
         }
 
+        const images = pendingScreenshotRef.current
+          ? [pendingScreenshotRef.current]
+          : [];
+
+        // The screenshot is attached to the next transcription only.
+        if (images.length > 0) {
+          setPendingScreenshot(null);
+        }
+
         try {
           for await (const chunk of fetchAIResponse({
             provider,
@@ -505,7 +525,7 @@ export function useSystemAudio() {
             systemPrompt: prompt,
             history: previousMessages,
             userMessage: transcription,
-            imagesBase64: [],
+            imagesBase64: images,
           })) {
             fullResponse += chunk;
             setLastAIResponse((prev) => prev + chunk);
@@ -544,7 +564,12 @@ export function useSystemAudio() {
         // No auto-restart - user manually controls when to start next recording
       }
     },
-    [selectedAIProvider, allAiProviders, conversation.messages]
+    [
+      selectedAIProvider,
+      allAiProviders,
+      conversation.messages,
+      setPendingScreenshot,
+    ]
   );
 
   const startCapture = useCallback(async () => {
@@ -624,12 +649,13 @@ export function useSystemAudio() {
       setLastAIResponse("");
       setError("");
       setIsPopoverOpen(false);
+      setPendingScreenshot(null);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : String(err);
       setError(`Failed to stop capture: ${errorMessage}`);
       console.error("Stop capture error:", err);
     }
-  }, []);
+  }, [setPendingScreenshot]);
 
   // Manual stop for continuous recording
   const manualStopAndSend = useCallback(async () => {
@@ -776,7 +802,8 @@ export function useSystemAudio() {
     setIsAIProcessing(false);
     setIsPopoverOpen(false);
     setUseSystemPrompt(true);
-  }, []);
+    setPendingScreenshot(null);
+  }, [setPendingScreenshot]);
 
   // Update VAD configuration
   const updateVadConfiguration = useCallback(async (config: VadConfig) => {
@@ -893,6 +920,9 @@ export function useSystemAudio() {
     setConversation,
     // AI processing
     processWithAI,
+    // Screenshot attached to the next transcription
+    pendingScreenshot,
+    setPendingScreenshot,
     // Context management
     useSystemPrompt,
     setUseSystemPrompt: updateUseSystemPrompt,

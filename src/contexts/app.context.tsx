@@ -1,5 +1,7 @@
 ﻿import {
   AI_PROVIDERS,
+  DEFAULT_AI_PROVIDER,
+  DEFAULT_STT_PROVIDER,
   DEFAULT_SYSTEM_PROMPT,
   SPEECH_TO_TEXT_PROVIDERS,
   STORAGE_KEYS,
@@ -196,6 +198,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     );
     if (savedSelectedAi) {
       setSelectedAIProvider(JSON.parse(savedSelectedAi));
+    } else {
+      // Fresh install: default to the local Ollama provider.
+      setSelectedAIProvider(DEFAULT_AI_PROVIDER);
     }
 
     // Load selected STT provider
@@ -204,6 +209,9 @@ export const AppProvider = ({ children }: { children: ReactNode }) => {
     );
     if (savedSelectedStt) {
       setSelectedSttProvider(JSON.parse(savedSelectedStt));
+    } else {
+      // Fresh install: default to the local Whisper provider.
+      setSelectedSttProvider(DEFAULT_STT_PROVIDER);
     }
 
     // Load customizable state

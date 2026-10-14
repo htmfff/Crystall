@@ -4,9 +4,9 @@ import {
   extractVariables,
   getByPath,
   getStreamingContent,
+  getFetchFunction,
 } from "./common.function";
 import { Message, TYPE_PROVIDER } from "@/types";
-import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
 import curl2Json from "@bany/curl-to-json";
 import { getResponseSettings, RESPONSE_LENGTHS, LANGUAGES } from "@/lib";
 import { MARKDOWN_FORMATTING_INSTRUCTIONS } from "@/config/constants";
@@ -157,7 +157,7 @@ export async function* fetchAIResponse(params: {
       }
     }
 
-    const fetchFunction = url?.includes("http") ? fetch : tauriFetch;
+    const fetchFunction = getFetchFunction(url);
 
     let response;
     try {

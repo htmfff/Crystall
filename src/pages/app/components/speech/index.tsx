@@ -63,6 +63,8 @@ export const SystemAudio = (props: useSystemAudioType) => {
     startContinuousRecording,
     ignoreContinuousRecording,
     scrollAreaRef,
+    pendingScreenshot,
+    setPendingScreenshot,
   } = props;
 
   const { hasActiveLicense, supportsImages } = useApp();
@@ -70,8 +72,8 @@ export const SystemAudio = (props: useSystemAudioType) => {
   // View mode toggle
   const [conversationMode, setConversationMode] = useState(false);
 
-  // Screenshot state
-  const [screenshotImage, setScreenshotImage] = useState<string | null>(null);
+  // Screenshot state (stored in the hook so it reaches the AI request)
+  const screenshotImage = pendingScreenshot;
   const [isCapturingScreenshot, setIsCapturingScreenshot] = useState(false);
 
   const isVadMode = vadConfig.enabled;
@@ -92,13 +94,6 @@ export const SystemAudio = (props: useSystemAudioType) => {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [isPopoverOpen]);
-
-  // Reset screenshot when processing starts (message is being sent)
-  useEffect(() => {
-    if (isProcessing && screenshotImage) {
-      setScreenshotImage(null);
-    }
-  }, [isProcessing, screenshotImage]);
 
   const handleToggleCapture = async () => {
     if (capturing) {
@@ -137,22 +132,20 @@ export const SystemAudio = (props: useSystemAudioType) => {
         }
       }
 
-      // Capture screenshot
-      const base64: string = await invoke("capture_screenshot", {
-        screenId: null, // Use default screen
-      });
+      // Capture the screen the overlay window is on
+      const base64: string = await invoke("capture_to_base64");
 
-      setScreenshotImage(base64);
+      setPendingScreenshot(base64);
     } catch (err) {
       console.error("Failed to capture screenshot:", err);
     } finally {
       setIsCapturingScreenshot(false);
     }
-  }, [isCapturingScreenshot]);
+  }, [isCapturingScreenshot, setPendingScreenshot]);
 
   const handleRemoveScreenshot = useCallback(() => {
-    setScreenshotImage(null);
-  }, []);
+    setPendingScreenshot(null);
+  }, [setPendingScreenshot]);
 
   const getButtonIcon = () => {
     if (setupRequired) return <AlertCircleIcon className="text-orange-500" />;

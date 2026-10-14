@@ -37,3 +37,23 @@ export const DEFAULT_QUICK_ACTIONS = [
   "Fact-check",
   "Recap",
 ];
+
+// Provider selected by default on a fresh install. Ollama runs locally, so no
+// API key is required to get started. Users can change this in Settings.
+export const DEFAULT_AI_PROVIDER: {
+  provider: string;
+  variables: Record<string, string>;
+} = {
+  provider: "ollama",
+  variables: { model: "qwen2.5" },
+};
+
+// Speech-to-text provider selected by default on a fresh install (local
+// whisper.cpp server). Users can change this in Settings.
+export const DEFAULT_STT_PROVIDER: {
+  provider: string;
+  variables: Record<string, string>;
+} = {
+  provider: "local-whisper-8080",
+  variables: { model: "whisper-1" },
+};

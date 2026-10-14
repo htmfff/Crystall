@@ -130,8 +130,9 @@ export const useChatCompletion = (
   }, []);
 
   const submit = useCallback(
-    async (speechText?: string) => {
+    async (speechText?: string, filesOverride?: AttachedFile[]) => {
       const input = speechText || state.input;
+      const files = filesOverride ?? state.attachedFiles;
 
       if (!input.trim()) {
         return;
@@ -165,8 +166,8 @@ export const useChatCompletion = (
 
         // Handle image attachments
         const imagesBase64: string[] = [];
-        if (state.attachedFiles.length > 0) {
-          state.attachedFiles.forEach((file) => {
+        if (files.length > 0) {
+          files.forEach((file) => {
             if (file.type.startsWith("image/")) {
               imagesBase64.push(file.base64);
             }
@@ -443,15 +444,10 @@ export const useChatCompletion = (
             size: base64.length,
           };
 
-          // Store files temporarily and submit
-          setState((prev) => ({
-            ...prev,
-            attachedFiles: [...prev.attachedFiles, attachedFile],
-            input: prompt,
-          }));
-
-          // Submit with the prompt and screenshot
-          setTimeout(() => submit(prompt), 100);
+          // Pass the screenshot explicitly so it is not lost to React's
+          // asynchronous state update (the previous setState + setTimeout
+          // approach submitted before attachedFiles was updated).
+          await submit(prompt, [attachedFile]);
         } else {
           // Manual mode: Add to attached files
           const attachedFile: AttachedFile = {

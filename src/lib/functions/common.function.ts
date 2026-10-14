@@ -1,4 +1,40 @@
 import { Message } from "@/types";
+import { fetch as tauriFetch } from "@tauri-apps/plugin-http";
+
+/**
+ * Returns true when the URL points to a local machine (localhost, loopback or
+ * any 127.0.0.0/8 address). Requests to these URLs are performed with the Tauri
+ * HTTP plugin instead of the webview `fetch`, because the webview enforces CORS
+ * and local services such as Ollama do not send CORS headers by default.
+ */
+export function isLocalUrl(url: string | undefined): boolean {
+  if (!url) return false;
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return (
+      host === "localhost" ||
+      host === "0.0.0.0" ||
+      host === "[::1]" ||
+      host.endsWith(".localhost") ||
+      /^127\./.test(host)
+    );
+  } catch {
+    return /(^|\/\/)(localhost|127\.\d+\.\d+\.\d+|0\.0\.0\.0)/i.test(url);
+  }
+}
+
+/**
+ * Picks the correct fetch implementation for a request URL.
+ *
+ * - Local URLs (Ollama, local Whisper, LM Studio, ...) go through the Tauri HTTP
+ *   plugin so they are not blocked by CORS.
+ * - Everything else keeps using the webview `fetch` (its behaviour is unchanged).
+ */
+export function getFetchFunction(
+  url: string | undefined
+): typeof fetch {
+  return isLocalUrl(url) ? (tauriFetch as unknown as typeof fetch) : fetch;
+}
 
 export function getByPath(obj: any, path: string): any {
   if (!path) return obj;

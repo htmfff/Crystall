@@ -1,5 +1,25 @@
 export const SPEECH_TO_TEXT_PROVIDERS = [
   {
+    id: "local-whisper-8080",
+    name: "Local Whisper (whisper.cpp server, :8080)",
+    curl: `curl -X POST http://localhost:8080/v1/audio/transcriptions \\
+      -H "Content-Type: multipart/form-data" \\
+      -F "file={{AUDIO}}" \\
+      -F "model={{MODEL}}"`,
+    responseContentPath: "text",
+    streaming: false,
+  },
+  {
+    id: "local-whisper-8000",
+    name: "Local Whisper (faster-whisper / Speaches, :8000)",
+    curl: `curl -X POST http://localhost:8000/v1/audio/transcriptions \\
+      -H "Content-Type: multipart/form-data" \\
+      -F "file={{AUDIO}}" \\
+      -F "model={{MODEL}}"`,
+    responseContentPath: "text",
+    streaming: false,
+  },
+  {
     id: "openai-whisper",
     name: "OpenAI Whisper",
     curl: `curl -X POST "https://api.openai.com/v1/audio/transcriptions" \\
